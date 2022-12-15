@@ -79,7 +79,7 @@ router.delete('/posts/:_postId', async (req, res) => {
   const { _postId } = req.params;
   const { password } = req.body;
   const deletePost = await Post.find({ _id: _postId });
-  const pass = deletePost.password;
+  const pass = deletePost[0].password;
 
   if (password !== pass) {
     res.status(400).json({ message: '비밀번호가 일치하지 않습니다.' });
