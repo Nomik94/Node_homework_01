@@ -14,13 +14,13 @@ router.get('/posts', async (req, res) => {
 });
 
 // 게시글 상세 조회
-router.get('/posts/:_id', async (req, res) => {
+router.get('/posts/:_postId', async (req, res) => {
   if (!req.params || !req.body) {
     res.status(400).json({ message: '데이터 형식이 올바르지 않습니다.' });
     return;
   }
-  const { _id } = req.params;
-  const [data] = await Post.find({ _id });
+  const { _postId } = req.params;
+  const [data] = await Post.find({ _id: _postId });
 
   res.status(200).json({ data });
 });
@@ -43,18 +43,18 @@ router.post('/posts', async (req, res) => {
 });
 
 // 게시글 수정
-router.put('/posts/:_id', async (req, res) => {
+router.put('/posts/:_postId', async (req, res) => {
   if (!req.params || !req.body) {
     res.status(400).json({ message: '데이터 형식이 올바르지 않습니다.' });
     return;
   }
-  const { _id } = req.params;
+  const { _postId } = req.params;
   const { password, title, content } = req.body;
   if (!password || !title || !content) {
     res.status(400).json({ message: '데이터 형식이 올바르지 않습니다.' });
     return;
   }
-  const data = await Post.find({ _id });
+  const data = await Post.find({ _id: _postId });
   if (!data.length) {
     res.status(404).json({ message: '게시글 조회에 실패하였습니다.' });
     return;
@@ -66,7 +66,7 @@ router.put('/posts/:_id', async (req, res) => {
     return;
   } else if (password === pass) {
     await Post.updateOne(
-      { password: password },
+      { _id: _postId },
       { $set: { title: title } },
       { $set: { content: content } }
     );
@@ -75,10 +75,10 @@ router.put('/posts/:_id', async (req, res) => {
 });
 
 // 게시글 삭제
-router.delete('/posts/:_id', async (req, res) => {
-  const { _id } = req.params;
+router.delete('/posts/:_postId', async (req, res) => {
+  const { _postId } = req.params;
   const { password } = req.body;
-  const deletePost = await Post.find({ _id });
+  const deletePost = await Post.find({ _id: _postId });
   const pass = deletePost[0].password;
 
   if (password !== pass) {
@@ -86,7 +86,7 @@ router.delete('/posts/:_id', async (req, res) => {
     return;
   }
   if (deletePost.length) {
-    await Post.deleteOne({ _id });
+    await Post.deleteOne({ _id: _postId });
   }
   res.status(200).json({ message: '게시글을 삭제하였습니다.' });
 });
