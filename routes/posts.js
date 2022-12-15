@@ -54,7 +54,6 @@ router.put('/posts/:_id', async (req, res) => {
     res.status(400).json({ message: '데이터 형식이 올바르지 않습니다.' });
     return;
   }
-  console.log(req.body);
   const data = await Post.find({ _id });
   if (!data.length) {
     res.status(404).json({ message: '게시글 조회에 실패하였습니다.' });
@@ -78,7 +77,14 @@ router.put('/posts/:_id', async (req, res) => {
 // 게시글 삭제
 router.delete('/posts/:_id', async (req, res) => {
   const { _id } = req.params;
+  const { password } = req.body;
   const deletePost = await Post.find({ _id });
+  const pass = deletePost[0].password;
+
+  if (password !== pass) {
+    res.status(400).json({ message: '비밀번호가 일치하지 않습니다.' });
+    return;
+  }
   if (deletePost.length) {
     await Post.deleteOne({ _id });
   }
