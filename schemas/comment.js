@@ -12,8 +12,16 @@ const commentSchema = new mongoose.Schema({
   content: {
     type: String,
   },
+  _postId: {
+    type: String,
+    required: true,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
-postSchema.set('timestamps', { createdAt: true, updatedAt: false });
+commentSchema.set('timestamps', { createdAt: true, updatedAt: false });
 
 module.exports = mongoose.model('Comment', commentSchema);

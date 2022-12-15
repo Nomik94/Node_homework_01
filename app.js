@@ -3,12 +3,12 @@ const app = express();
 const port = 3000;
 
 const postsRouter = require('./routes/posts');
-// const commentsRouter = require('./routes/comments');
+const commentsRouter = require('./routes/comments');
 const connect = require('./schemas');
 connect();
 
 app.use(express.json());
-app.use('/api', [postsRouter]);
+app.use('/api', [postsRouter, commentsRouter]);
 
 app.get('/', (req, res) => {
   res.send('hello world');
