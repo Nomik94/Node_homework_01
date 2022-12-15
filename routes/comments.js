@@ -55,12 +55,12 @@ router.put('/comments/:_commentId', async (req, res) => {
     res.status(400).json({ message: '댓글 내용을 입력해주세요.' });
     return;
   }
-  const data = await Comment.find({ _id: _commentId });
-  if (!data.length) {
+  const data = await Comment.findOne({ _id: _commentId });
+  if (data === null) {
     res.status(404).json({ message: '댓글 조회에 실패하였습니다.' });
     return;
   }
-  const pass = data[0].password;
+  const pass = data.password;
 
   if (password !== pass) {
     res.status(400).json({ message: '비밀번호가 일치하지 않습니다.' });
