@@ -28,7 +28,7 @@ router.get('/posts/:_postId', async (req, res) => {
 // 게시글 생성
 router.post('/posts', async (req, res) => {
   const { user, password, title, content } = req.body;
-  if (!password || !title || !content || !password) {
+  if (!user || !password || !title || !content) {
     res.status(400).json({ message: '데이터 형식이 올바르지 않습니다.' });
     return;
   }
@@ -55,7 +55,7 @@ router.put('/posts/:_postId', async (req, res) => {
     return;
   }
   const data = await Post.find({ _id: _postId });
-  if (!data.length) {
+  if (data === null) {
     res.status(404).json({ message: '게시글 조회에 실패하였습니다.' });
     return;
   }
@@ -79,7 +79,7 @@ router.delete('/posts/:_postId', async (req, res) => {
   const { _postId } = req.params;
   const { password } = req.body;
   const deletePost = await Post.find({ _id: _postId });
-  const pass = deletePost[0].password;
+  const pass = deletePost.password;
 
   if (password !== pass) {
     res.status(400).json({ message: '비밀번호가 일치하지 않습니다.' });
